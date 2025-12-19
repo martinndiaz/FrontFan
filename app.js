@@ -1247,8 +1247,35 @@ function initConfirmacionPage() {
   console.log("✅ initConfirmacionPage corriendo");
 
   const pending = normalizeBookingPayload(
+    safeParseJSON(localStorage.getItem("confirmationData"), null) ||
     safeParseJSON(localStorage.getItem("pendingBooking"), null)
   );
+
+const user = safeParseJSON(localStorage.getItem("user"), null);
+
+
+if (pending) {
+  
+  if (pending.patientName) {
+   
+  }
+
+  else if (user && user.role === "patient") {
+    pending.patientName  = user.name || "—";
+    pending.patientRut   = user.rut || "—";
+    pending.patientEmail = user.email || "—";
+    pending.patientPhone = user.phone_number || "—";
+  }
+  
+  else {
+    pending.patientName  = "—";
+    pending.patientRut   = "—";
+    pending.patientEmail = "—";
+    pending.patientPhone = "—";
+  }
+}
+
+
 
   const confirmBtn = document.getElementById("confirmAppointmentBtn");
   if (!confirmBtn) return;
@@ -1307,6 +1334,8 @@ function initConfirmacionPage() {
       startTime: pending.startTime,
       endTime: pending.endTime || null
     });
+
+    localStorage.setItem("appointmentCreated", JSON.stringify(created));
 
     console.log("✅ CITA CREADA:", created);
 
