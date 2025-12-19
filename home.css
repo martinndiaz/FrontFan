@@ -18,7 +18,7 @@
   padding: 0;
 }
 
-/* ---------- Layout y cabecera compartida ---------- */
+
 
 body {
   min-height: 100vh;
@@ -52,13 +52,17 @@ a {
   gap: 16px;
 }
 
-.brand__logo {
-  width: 56px;
-  height: 56px;
-  border-radius: 18px;
-  /* Sustituye este degradado por un color plano o elimina el fondo si insertas un <img> en el HTML */
-  background: linear-gradient(145deg, #6df0c0, #3bc4a4 58%, #0f4138);
-  box-shadow: inset 0 6px 12px rgba(255, 255, 255, 0.12), var(--shadow);
+.brand__logo{
+  width:56px;
+  height:56px;
+  border-radius:18px;
+
+  background-image: url("./img/YEAH.png");
+  background-size: cover;      
+  background-position: center;
+  background-repeat: no-repeat;
+
+  box-shadow: inset 0 6px 12px rgba(255,255,255,.12), var(--shadow);
 }
 
 .brand__text {
@@ -111,7 +115,7 @@ a {
   transform: scaleX(1);
 }
 
-/* El script global añade esta clase para resaltar la página activa en el menú. */
+
 .site-nav a.is-active {
   color: var(--accent);
 }
@@ -120,7 +124,7 @@ a {
   transform: scaleX(1);
 }
 
-/* ---------- Pestaña Inicio ---------- */
+
 
 .hero {
   position: relative;
@@ -135,7 +139,7 @@ a {
   overflow: hidden;
 }
 
-/* app.js añade .is-ready para animar suavemente la entrada del banner principal. */
+
 .has-js .hero {
   opacity: 0;
   transform: translateY(28px);
@@ -211,7 +215,7 @@ a {
   content: "";
   position: absolute;
   inset: 0;
-  /* Cambia la imagen principal del home reemplazando esta URL */
+  
   background: url("https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=900&q=80") center/cover;
   filter: saturate(115%);
   transition: transform 0.6s ease;
@@ -228,7 +232,7 @@ a {
   transform: scale(1.05);
 }
 
-/* ---------- Pestaña Valores ---------- */
+
 
 .values {
   display: flex;
@@ -252,7 +256,6 @@ a {
 .values__hero-layer {
   position: absolute;
   inset: 0;
-  /* Reemplaza la fotografía de fondo de la sección Valores editando esta URL */
   background: url("https://images.unsplash.com/photo-1558611848-73f7eb4001a1?auto=format&fit=crop&w=1600&q=80") center/cover;
   opacity: 0.35;
 }
@@ -369,12 +372,12 @@ a {
 
 .value-card__media--evaluacion::after {
   /* Ajusta la imagen de la tarjeta "Evaluación Kinesiológica" modificando esta URL */
-  background-image: url("https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=900&q=80");
+  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT406iJllTKvwdSj8beqavpv5hQanE_qbUXAA&s");
 }
 
 .value-card__media--kine-1::after {
   /* Actualiza la imagen de la sesión individual reemplazando la URL */
-  background-image: url("https://images.unsplash.com/photo-1603394726650-433a95f6e417?auto=format&fit=crop&w=900&q=80");
+  background-image: url("https://sportsalud.cl/wp-content/uploads/2024/03/19.-Rehabilitacion-de-Protesis-de-Rodilla-1024x867.webp");
 }
 
 .value-card__media--kine-5::after {
@@ -384,17 +387,17 @@ a {
 
 .value-card__media--kine-15::after {
   /* Cambia la imagen del plan de 15 sesiones modificando la URL */
-  background-image: url("https://images.unsplash.com/photo-1579154203451-0ef3fc0d7f8a?auto=format&fit=crop&w=900&q=80");
+  background-image: url("https://kinedaniel.cl/wp-content/uploads/2024/05/IMG_8431-1024x1024.jpg");
 }
 
 .value-card__media--fisica::after {
   /* Reemplaza la imagen de kinesiología física editando la URL */
-  background-image: url("https://images.unsplash.com/photo-1582719478250-0f5ee8a0a52a?auto=format&fit=crop&w=900&q=80");
+  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiLli361h7krfybUcdDaJQxnN_0MAvKmldLQ&s");
 }
 
 .value-card__media--ocupacional::after {
   /* Reemplaza la imagen de terapia ocupacional editando la URL */
-  background-image: url("https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=900&q=80");
+  background-image: url("https://visitingangels.com.mx/del-valle/wp-content/uploads/sites/48/2024/08/shutterstock_2299594833.jpg");
 }
 
 .value-card__body {
@@ -479,7 +482,6 @@ a {
   content: "";
   position: absolute;
   inset: 0;
-  /* Reemplaza la imagen del equipo modificando esta URL */
   background: url("https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=900&q=80") center/cover;
   transition: transform 0.6s ease;
 }
@@ -676,7 +678,7 @@ a {
   line-height: 1.65;
 }
 
-/* Equipo clínico */
+
 
 .about__team {
   display: flex;
@@ -735,7 +737,6 @@ a {
   box-shadow: inset 0 0 0 1px rgba(109, 240, 192, 0.3), 0 30px 48px rgba(3, 21, 18, 0.6);
 }
 
-/* app.js agrega esta clase para resaltar el perfil seleccionado en ¿Quiénes somos? */
 .team-card.is-active {
   transform: translateY(-8px);
   box-shadow: inset 0 0 0 1px rgba(109, 240, 192, 0.42), 0 34px 58px rgba(3, 21, 18, 0.65);
@@ -768,22 +769,22 @@ a {
 }
 
 .team-card__photo--andrea::after {
-  /* Sustituye la foto de Andrea Vega actualizando esta URL */
-  background-image: url("https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=800&q=80");
-}
 
-.team-card__photo--matias::after {
-  /* Sustituye la foto de Matías León actualizando esta URL */
   background-image: url("https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80");
 }
 
+.team-card__photo--matias::after {
+  
+  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7Qkdjq2jwE-nlP4PPO3mywyT1HDkTLsNO1A&s");
+}
+
 .team-card__photo--valentina::after {
-  /* Sustituye la foto de Valentina Rojas actualizando esta URL */
+ 
   background-image: url("https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80");
 }
 
 .team-card__photo--ignacio::after {
-  /* Sustituye la foto de Ignacio Fuentes actualizando esta URL */
+ 
   background-image: url("https://images.unsplash.com/photo-1520367745676-234fdd6e9ff3?auto=format&fit=crop&w=800&q=80");
 }
 
@@ -820,7 +821,7 @@ a {
   text-transform: uppercase;
 }
 
-/* Llamado final */
+
 
 .about__cta {
   margin-top: clamp(32px, 6vw, 56px);
@@ -902,8 +903,8 @@ a {
   content: "";
   position: absolute;
   inset: 0;
-  /* Reemplaza la imagen del equipo modificando esta URL */
-  background: url("https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=900&q=80") center/cover;
+
+  background: url("https://prestigephysio.com/wp-content/uploads/2023/02/qualified-physiotherapist-assessing-muscle-strengt-2022-01-11-15-12-53-utc.jpg") center/cover;
   transition: transform 0.6s ease;
 }
 
@@ -1177,23 +1178,23 @@ a {
 }
 
 .team-card__photo--andrea::after {
-  /* Sustituye la foto de Andrea Vega actualizando esta URL */
-  background-image: url("https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=800&q=80");
+  
+  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8miLCoA3Wcl0CkSiZrWB7PUyG-7uWU9Oe6g&s");
 }
 
 .team-card__photo--matias::after {
-  /* Sustituye la foto de Matías León actualizando esta URL */
-  background-image: url("https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80");
+  
+  background-image: url("https://immigration.ca/wp-content/uploads/2023/09/Kinesiologist_523420063-scaled.jpeg");
 }
 
 .team-card__photo--valentina::after {
-  /* Sustituye la foto de Valentina Rojas actualizando esta URL */
-  background-image: url("https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80");
+ 
+  background-image: url("https://acaciahealth.ca/wp-content/uploads/2024/01/shutterstock_1550853083.jpg");
 }
 
 .team-card__photo--ignacio::after {
-  /* Sustituye la foto de Ignacio Fuentes actualizando esta URL */
-  background-image: url("https://images.unsplash.com/photo-1520367745676-234fdd6e9ff3?auto=format&fit=crop&w=800&q=80");
+ 
+  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ0CEkukiAoDp6tZ5vsWPkqy8FnznJwlBaHQ&s");
 }
 
 .team-card__name {
@@ -1686,7 +1687,6 @@ a {
   mix-blend-mode: multiply;
 }
 
-/* Ajusta las imágenes principales por profesional modificando estas clases */
 .booking__profile-photo--lissette::after {
   background: url("https://images.unsplash.com/photo-1603394668370-0d9dc11dc8df?auto=format&fit=crop&w=800&q=80") center/cover;
 }

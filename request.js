@@ -11,7 +11,7 @@ export async function loadProfessionals() {
 
     const raw = await response.json();
 
-    // 🔥 Normalización: backend → frontend compatible
+    
     const professionals = {};
 
     raw.forEach((p) => {
@@ -25,17 +25,16 @@ export async function loadProfessionals() {
         rut: p.rut,
         box: p.box,
 
-        // Puedes personalizar fotos después
+        
         photoClass: `booking__profile-photo--p${p.id}`,
         avatarClass: `booking-card__avatar--p${p.id}`,
 
-        // Tags derivados automáticamente
+        
         tags: [
           p.specialty,
           `Box: ${p.box}`,
         ],
 
-        // Sesiones estándar (puedes personalizarlas luego por profesional)
         sessions: [
           {
             title: "Evaluación inicial",

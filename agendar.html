@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Centro de salud y Bienestar - Agendar hora</title>
 
-  <!-- Fuentes -->
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -18,12 +18,11 @@
 
 <body data-page="agendar">
   <div class="layout">
-    <!-- HEADER -->
+   
     <header class="site-header">
       <div class="brand">
         <div class="brand__logo">
-          <!-- Logo aquí si quieres -->
-          <!-- <img src="./img/logo.svg" alt="Centro de salud y Bienestar" /> -->
+       
         </div>
         <div class="brand__text">
           <span>Centro de salud y</span>
@@ -40,7 +39,7 @@
   <a class="site-nav__user" data-nav-target="usuario" href="./ingreseAqui.html" data-auth-user-link>Invitado</a>
 </nav>
     </header>
-    <!-- ========= DIRECTORIO DE KINESIÓLOGOS + SERVICIOS + HORARIOS ========= -->
+   
     <section class="kine-directory" data-kine-directory>
       <div class="kine-directory__header">
         <div>
@@ -58,7 +57,7 @@
             Selecciona un profesional para ver su perfil, tratamientos y horarios.
           </p>
         </div>
-        <!-- Lista de kines cargada por JS -->
+       
         <div class="kine-directory__list" data-kine-list aria-live="polite">
           <div class="kine-directory__placeholder">
             <span class="kine-directory__spinner" aria-hidden="true"></span>
@@ -70,11 +69,11 @@
         </div>
       </aside>
       <article class="kine-directory__detail" data-kine-detail aria-live="polite">
-        <!-- Estado vacío -->
+        
         <div class="kine-directory__empty" data-kine-empty>
           <p>Selecciona un profesional para ver su información y sus horarios.</p>
         </div>
-         <!-- Perfil + servicios + horarios -->
+         
         <div class="kine-directory__profile" data-kine-profile hidden>
           <header class="kine-directory__profile-head">
             <div class="kine-directory__avatar" data-kine-avatar aria-hidden="true"></div>
@@ -105,10 +104,10 @@
               <a class="kine-card__action" data-kine-email-link>Enviar correo</a>
             </div>
           </section>
-          <!-- Tratamientos -->
+         
           <section class="kine-services" aria-label="Selecciona un servicio" data-kine-services>
           </section>
-          <!-- Horarios -->
+          
           <section class="kine-directory__slots" data-kine-slots>
             <p class="kine-directory__slots-empty">
               Selecciona “Ver horarios” en un servicio.
@@ -118,7 +117,7 @@
          </article>
     </section>
   </div>
-  <!-- SCRIPTS -->
+  
   <script src="./api.js" type="module"></script>
   <script src="./request.js" type="module"></script>
   <script src="./app.js" type="module"></script>

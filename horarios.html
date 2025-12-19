@@ -10,12 +10,12 @@
   <link rel="stylesheet" href="./home.css" />
 </head>
 <body data-page="horarios">
-  <!-- data-page permite que app.js aplique la lógica específica de la agenda interactiva. -->
+ 
   <div class="layout">
     <header class="site-header">
       <div class="brand">
         <div class="brand__logo">
-          <!-- Sustituye este contenedor por un <img> si deseas mostrar el logotipo institucional. -->
+        
         </div>
         <div class="brand__text">
           <span>Centro de salud y</span>
@@ -48,7 +48,7 @@
               <label class="schedule__select" aria-label="Seleccionar kinesiólogo">
                 <span>Profesional</span>
                 <select data-schedule-professional>
-                  <!-- Las opciones se crean dinámicamente desde app.js -->
+            
                 </select>
               </label>
             </div>
@@ -91,7 +91,7 @@
             <header class="schedule-summary__header">
               <div class="schedule-profile">
                 <div class="schedule-profile__photo schedule-profile__photo--lissette" data-schedule-photo aria-hidden="true"></div>
-                <!-- Reemplaza la imagen principal del perfil editando las clases schedule-profile__photo--* en home.css. -->
+                
                 <div class="schedule-profile__info">
                   <span class="schedule-profile__role" data-schedule-role></span>
                   <h2 data-schedule-name></h2>
@@ -110,7 +110,7 @@
                   <li><strong>Duración:</strong> <span data-schedule-duration>45 minutos</span></li>
                   <li><strong>Precio:</strong> <span data-schedule-price>$35.000 CLP</span></li>
                 </ul>
-                <!-- Ajusta los datos del servicio modificando los atributos data-schedule-* desde app.js. -->
+                
               </div>
 
               <div class="schedule-summary__selection" data-schedule-selection>
@@ -129,7 +129,7 @@
       </div>
     </main>
   </div>
-   <!-- Define la URL base de la API antes del script principal. -->
+   
   <script src="./api.js" type="module"></script>
 <script src="./request.js" type="module"></script>
 <script src="./app.js" type="module"></script>

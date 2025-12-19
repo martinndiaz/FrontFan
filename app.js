@@ -79,9 +79,7 @@ const DEFAULT_TREATMENTS = [
   },
 ];
 
-/****************************************************
- * Helpers
- ****************************************************/
+
 
 function withNgrokHeader(headers = {}) {
   return { "ngrok-skip-browser-warning": "true", ...headers };
@@ -171,8 +169,8 @@ async function bookAppointmentInBackend(pending, token) {
 
 function startOfWeekMonday(date) {
   const d = new Date(date);
-  const day = d.getDay(); // 0=Dom ... 6=Sáb
-  const diff = (day + 6) % 7; // Lun -> 0
+  const day = d.getDay(); 
+  const diff = (day + 6) % 7; 
   d.setDate(d.getDate() - diff);
   d.setHours(0, 0, 0, 0);
   return d;
@@ -202,7 +200,7 @@ function formatWeekLabel(startDate) {
 }
 
 function formatDayLabel(dateObj) {
-  // "lunes, 09 de diciembre"
+  
   return dateObj.toLocaleDateString("es-CL", { weekday: "long", day: "2-digit", month: "long" });
 }
 
@@ -229,9 +227,7 @@ function getPhotoClassForKineName(name = "") {
   return "schedule-profile__photo--lissette";
 }
 
-/****************************************************
- * Autenticación UI (Header)
- ****************************************************/
+
 
 function isUserLoggedIn() {
   const token = localStorage.getItem("authToken");
@@ -255,7 +251,7 @@ function updateAuthUI() {
   const loginLink = document.querySelector("[data-auth-action]");
   const userLink = document.querySelector("[data-auth-user-link]");
 
-  // Si esta página no tiene header con estos elementos, salimos.
+ 
   if (!loginLink || !userLink) return;
 
   const token   = localStorage.getItem("authToken");
@@ -298,7 +294,7 @@ function updateAuthUI() {
 }
 
 
-// Compatibilidad con llamadas existentes
+
 window.updateAuthUI = updateAuthUI;
 
 /**
@@ -385,7 +381,7 @@ async function initKineDirectory() {
   });
 
   function showKineDetail(k) {
-    // activo en lista
+   
     listEl?.querySelectorAll(".kine-directory__item").forEach((btn) => {
       const isActive = btn.dataset.id == k.id;
       btn.classList.toggle("kine-directory__item--active", isActive);
@@ -414,7 +410,7 @@ async function initKineDirectory() {
 
     renderServices(k);
 
-    // Ya no cargamos slots aquí (se hace en horarios.html)
+   
     if (slotsContainer) {
       slotsContainer.innerHTML = `
         <p class="kine-directory__slots-empty">
@@ -453,7 +449,7 @@ async function initKineDirectory() {
       btn.textContent = "Ver horarios";
 
       btn.addEventListener("click", () => {
-        // selección visual
+        
         grid.querySelectorAll(".service-card").forEach((c) => c.classList.remove("service-card--selected"));
         card.classList.add("service-card--selected");
 
@@ -476,17 +472,11 @@ async function initKineDirectory() {
     });
   }
 
-  // autoselección para no dejar vacío
+  
   if (professionals.length) showKineDetail(professionals[0]);
 }
 
-/**
- * horarios.html (UI antigua)
- * - Carga profesionales reales
- * - Renderiza semana (7 días) con diseño .schedule-day
- * - Carga slots por día desde: /api/kinesiologists/<id>/slots/?date=YYYY-MM-DD
- * - Guarda todo en pendingBooking y habilita "Continuar"
- */
+
 async function initSchedulePage() {
   const page = document.body?.dataset?.page;
   if (page !== "horarios") return;
@@ -508,7 +498,7 @@ async function initSchedulePage() {
   const morningList = document.querySelector('[data-slot-period="morning"]');
   const afternoonList = document.querySelector('[data-slot-period="afternoon"]');
 
-  // Summary
+  
   const photoEl = document.querySelector("[data-schedule-photo]");
   const roleEl = document.querySelector("[data-schedule-role]");
   const nameEl = document.querySelector("[data-schedule-name]");
@@ -529,7 +519,7 @@ async function initSchedulePage() {
   const params = new URLSearchParams(window.location.search);
   const urlKineId = params.get("kineId");
 
-  // pendingBooking viene desde agendar.html
+  
   let pending = normalizeBookingPayload(safeParseJSON(localStorage.getItem("pendingBooking"), {}) || {}) || {};
 
   let professionals = [];
@@ -541,11 +531,11 @@ async function initSchedulePage() {
     return;
   }
 
-  // Selección inicial: URL kineId > pendingBooking > primero
+  
   const initialKineId = urlKineId || pending.kinesiologistId || (professionals[0]?.id ? String(professionals[0].id) : "");
   let selectedKine = professionals.find((p) => String(p.id) === String(initialKineId)) || professionals[0] || null;
 
-  // Pintar select
+  
   professionalSelect.innerHTML = "";
   professionals.forEach((k) => {
     const opt = document.createElement("option");
@@ -555,12 +545,12 @@ async function initSchedulePage() {
   });
   if (selectedKine) professionalSelect.value = String(selectedKine.id);
 
-  // Estado de semana + cache
+ 
   let weekStart = startOfWeekMonday(new Date());
   const minWeekStart = startOfWeekMonday(new Date());
   let selectedDayISO = null;
   let selectedSlot = null;
-  let weekCache = new Map(); // iso => slots[]
+  let weekCache = new Map(); 
 
   function setSummaryProfessional(k) {
     if (!k) return;
@@ -568,7 +558,7 @@ async function initSchedulePage() {
     if (roleEl) roleEl.textContent = k.specialty || "";
     if (photoEl) photoEl.className = `schedule-profile__photo ${getPhotoClassForKineName(k.name)}`;
 
-    // Mantener pendingBooking actualizado
+    
     pending = {
       ...pending,
       kinesiologistId: k.id,
@@ -662,7 +652,7 @@ async function initSchedulePage() {
       const rangeLabel = endTime ? `${time}-${endTime}` : time;
       setSelectionLabel(`${iso} • ${rangeLabel}`);
 
-      // Actualizar pendingBooking con fecha/hora
+      
       pending = normalizeBookingPayload({
         ...pending,
         date: iso,
@@ -682,13 +672,13 @@ async function initSchedulePage() {
 
     clearSlotsUI();
 
-    // 1) Mostrar sección
+    
 slotsSection.hidden = false;
 
-// 2) Marcar estado abierto (esto es CLAVE por tu CSS)
+
 slotsSection.dataset.state = "open";
 
-// 3) Setear altura para el max-height animado
+
 requestAnimationFrame(() => {
   const h = slotsSection.scrollHeight;
   slotsSection.style.setProperty("--schedule-slots-height", `${h}px`);
@@ -726,7 +716,7 @@ requestAnimationFrame(() => {
       confirmBtn.disabled = true;
     if (weekLabelEl) weekLabelEl.textContent = formatWeekLabel(weekStart)
 
-    // Deshabilitar retroceso si ya estás en la semana actual
+   
       if (prevBtn) prevBtn.disabled = weekStart.getTime() <= minWeekStart.getTime();
 
       const shouldAnimate = transitionDir === "forward" || transitionDir === "backward";
@@ -765,7 +755,7 @@ requestAnimationFrame(() => {
         weekRoot.appendChild(makeDayButton(info.date, slots.length));
       });
 
-      // Auto-abrir el día de hoy (o el siguiente disponible) para que se desplieguen las horas
+      
       const todayIso = toISODateLocal(new Date());
       const inCurrentWeek = weekStart.getTime() === minWeekStart.getTime();
 
@@ -790,7 +780,7 @@ requestAnimationFrame(() => {
     }
   }
 
-  // Eventos
+  
   professionalSelect.addEventListener("change", async () => {
     const id = professionalSelect.value;
     selectedKine = professionals.find((p) => String(p.id) === String(id)) || null;
@@ -805,7 +795,6 @@ requestAnimationFrame(() => {
 
   prevBtn?.addEventListener("click", async () => {
     const candidate = addDays(weekStart, -7);
-    // No permitir retroceder a semanas anteriores a la semana actual
     weekStart = candidate.getTime() < minWeekStart.getTime() ? new Date(minWeekStart) : candidate;
     selectedDayISO = null;
     selectedSlot = null;
@@ -820,7 +809,7 @@ requestAnimationFrame(() => {
   });
 
   confirmBtn.addEventListener("click", () => {
-    // pendingBooking ya tiene kine + servicio + (si seleccionó) fecha/hora
+  
     const normalized = {
       ...pending,
       startTime: pending?.startTime || pending?.start_time,
@@ -834,7 +823,7 @@ requestAnimationFrame(() => {
     window.location.href = nextStep;
   });
 
-  // Boot
+ 
   setSummaryService();
   setSummaryProfessional(selectedKine);
   await loadWeekSlots();
@@ -868,12 +857,12 @@ function initLoginSystem() {
 
       const data = await response.json();
 
-      // ✅ Guardar sesión
+      
       localStorage.setItem("authToken", data.token);
       if (data.role) localStorage.setItem("role", data.role);
       if (data.user) localStorage.setItem("user", JSON.stringify({ ...data.user, role: data.role || null }));
 
-      // ✅ Detectar si es kinesiólogo por permiso REAL (probando el endpoint)
+  
       try {
         const probe = await fetch(`${BASE_URL}api/kinesiologist/appointments/upcoming/`, {
           headers: {
@@ -888,7 +877,7 @@ function initLoginSystem() {
           window.location.href = "historial.html";
         }
       } catch (e) {
-        // si falla por red o algo raro, cae a historial
+        
         window.location.href = "historial.html";
       }
 
@@ -1196,7 +1185,7 @@ function initHistoryViews() {
     }
   }
 
-  // ✅ SOLO 1 vez (tú lo tenías duplicado)
+ 
   links.forEach(link => {
     link.addEventListener("click", () => {
       links.forEach(l => l.classList.remove("is-active"));
@@ -1442,7 +1431,6 @@ async function initKinePanelView() {
       }
     });
 
-    // Si entra un paciente por error, aquí debería caer en 403
     if (res.status === 403) {
       listEl.innerHTML = `<div class="kine__empty">Acceso denegado. Esta sección es solo para kinesiólogos.</div>`;
       if (countEl) countEl.textContent = "0";
@@ -1542,7 +1530,7 @@ async function initKinePanelView() {
   btnCancel?.addEventListener("click", () => updateStatus("cancelled"));
   btnSave?.addEventListener("click", () => saveComment());
 
-  // Carga inicial
+  
   await loadUpcoming();
 }
 
@@ -1778,19 +1766,19 @@ async function initKineProfilePage() {
     return;
   }
 
-  // Si el rol no está en localStorage, NO redirigimos: dejamos que el backend responda 403 y mostramos mensaje.
+ 
   if (!isKineUser(user)) {
     const msgEl = document.querySelector("[data-kine-profile-msg]");
     if (msgEl) msgEl.textContent = "Acceso restringido (rol no detectado en sesión).";
   }
 
-  // UI (resumen)
+  
   const nameEl  = document.querySelector("[data-kine-profile-name]");
   const emailEl = document.querySelector("[data-kine-profile-email]");
   const phoneEl = document.querySelector("[data-kine-profile-phone]");
   const rutEl   = document.querySelector("[data-kine-profile-rut]");
 
-  // UI (form)
+
   const form = document.querySelector("[data-kine-profile-form]");
   const emailInp = document.querySelector("[data-kine-profile-email-input]");
   const phoneInp = document.querySelector("[data-kine-profile-phone-input]");
@@ -1801,7 +1789,7 @@ async function initKineProfilePage() {
 
   const setMsg = (t = "") => { if (msgEl) msgEl.textContent = t; };
 
-  // ⚠️ Endpoint sugerido (ajústalo si tu backend usa otro)
+ 
   const PROFILE_URL = `${BASE_URL}api/kinesiologist/profile/`;
 
   async function loadProfile() {
@@ -1920,7 +1908,7 @@ async function initKineHorarioPage() {
     return;
   }
 
-  // Si el rol no está en localStorage, NO redirigimos: dejamos que el backend responda 403 y mostramos mensaje.
+
   if (!isKineUser(user)) {
     const msgEl = document.querySelector("[data-kine-avail-msg]");
     if (msgEl) msgEl.textContent = "Acceso restringido (rol no detectado en sesión).";
@@ -1938,11 +1926,11 @@ async function initKineHorarioPage() {
 
   const setMsg = (t="") => { if (msgEl) msgEl.textContent = t; };
 
-  // Estado local
+  
   let selectedDay = "mon";
   let blocksByDay = { mon: [], tue: [], wed: [], thu: [], fri: [], sat: [], sun: [] };
 
-  // ⚠️ Endpoints sugeridos (ajústalos si tu backend usa otros)
+  
   const AVAIL_URL = (kineId) => `${BASE_URL}api/kinesiologists/${kineId}/availability/`;
 
   function normalizeBlocks(data) {
@@ -2016,7 +2004,7 @@ async function initKineHorarioPage() {
 
       const data = await res.json();
 
-      // En tu backend, este GET devuelve: { kinesiologist, availability: [...], appointments: [...] }
+   
       const items = Array.isArray(data) ? data : (data.availability || []);
 
       blocksByDay[dayKey] = (items || [])
@@ -2053,7 +2041,7 @@ async function initKineHorarioPage() {
     setMsg("Guardando disponibilidad...");
 
     try {
-      // ✅ BULK: el backend acepta { availability: { mon:[{start,end}], ... } }
+     
       const payload = { availability: blocksByDay };
 
       const res = await fetch(`${BASE_URL}api/kinesiologists/${kineId}/availability/`, {
@@ -2088,7 +2076,7 @@ async function initKineHorarioPage() {
     }
   }
 
-  // Selección de día
+ 
   dayButtons.forEach((btn) => {
     btn.addEventListener("click", async () => {
       dayButtons.forEach(b => b.classList.remove("is-active"));
@@ -2100,7 +2088,7 @@ async function initKineHorarioPage() {
     });
   });
 
-  // Agregar bloque
+ 
   addBtn?.addEventListener("click", () => {
     const start = startInp?.value || "";
     const end = endInp?.value || "";
@@ -2129,7 +2117,7 @@ async function initKineHorarioPage() {
     await saveAllToBackend();
   });
 
-  // Boot inicial
+  
   const monBtn = dayButtons.find(b => b.dataset.kineDay === "mon");
   monBtn?.classList.add("is-active");
   renderDay(selectedDay);
@@ -2201,7 +2189,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initProfilePage();
   loadPatientProfile();
 
-  // ✅ Panel Kine como página independiente
+  
   if (document.body?.dataset?.page === "panelkine") {
     initKinePanelView();
   }
