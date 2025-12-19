@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Horario del Kinesiólogo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./home.css" />
+</head>
+<body data-page="kine-horario">
+  <div class="layout">
+    <header class="site-header">
+      <div class="brand">
+        <div class="brand__logo">
+          <!-- Sustituye este bloque por tu logotipo: <img src="ruta/logo.svg" alt="Nombre de la marca" /> -->
+        </div>
+        <div class="brand__text">
+          <span>Centro de salud y</span>
+          <span class="brand__text--bold">Bienestar</span>
+        </div>
+        </div>
+      <nav class="site-nav">
+  <a data-nav-target="home" href="./home.html#inicio">Inicio</a>
+  <a data-nav-target="valores" href="./valores.html">Valores</a>
+  <a data-nav-target="quienes" href="./quienes.html">¿Quiénes somos?</a>
+  <a data-nav-target="agendar" href="./agendar.html">Agendar hora</a>
+  <a data-nav-target="ingresar" href="./ingreseAqui.html" data-auth-action>Ingresar</a>
+  <a class="site-nav__user" data-nav-target="usuario" href="./ingreseAqui.html" data-auth-user-link>Invitado</a>
+</nav>
+    </header>
+
+      <main class="dashboard-page" aria-labelledby="schedule-title">
+      <div class="dashboard">
+        <aside class="sidebar">
+          <div class="sidebar__brand">
+            <div class="sidebar__logo"></div>
+            <div class="sidebar__title">Centro de Salud y Bienestar</div>
+          </div>
+          <nav class="sidebar__nav" aria-label="Navegación principal">
+            <a class="sidebar__link" href="./panelkine.html">Panel</a>
+            <a class="sidebar__link" href="./kine_perfil.html">Perfil</a>
+            <a class="sidebar__link is-active" href="./kine_horario.html">Horario</a>
+          </nav>
+        </aside>
+
+      <div class="dashboard__main">
+          <header class="page-header">
+            <div class="page-header__titles">
+              <p class="page-header__eyebrow">Disponibilidad</p>
+              <h1 class="page-header__title" id="schedule-title">Horario de trabajo</h1>
+              <p class="page-header__subtitle">Define tus bloques de atención para cada día de la semana.</p>
+            </div>
+          </header>
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Selecciona un día</h2>
+            </div>
+            <div class="day-selector">
+              <button class="chip" type="button" data-kine-day="mon">Lunes</button>
+              <button class="chip" type="button" data-kine-day="tue">Martes</button>
+              <button class="chip" type="button" data-kine-day="wed">Miércoles</button>
+              <button class="chip" type="button" data-kine-day="thu">Jueves</button>
+              <button class="chip" type="button" data-kine-day="fri">Viernes</button>
+              <button class="chip" type="button" data-kine-day="sat">Sábado</button>
+              <button class="chip" type="button" data-kine-day="sun">Domingo</button>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Agregar bloque de disponibilidad</h2>
+            </div>
+            <div class="form form--inline">
+              <div class="form__group">
+                <label class="form__label" for="avail-start">Hora inicio</label>
+                <input class="input" id="avail-start" type="time" data-kine-avail-start />
+              </div>
+              <div class="form__group">
+                <label class="form__label" for="avail-end">Hora fin</label>
+                <input class="input" id="avail-end" type="time" data-kine-avail-end />
+              </div>
+              <button class="button button--solid" type="button" data-kine-avail-add>Agregar</button>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Bloques del día</h2>
+            </div>
+            <div class="list" data-kine-avail-list>
+              <div class="empty">Sin bloques aún</div>
+            </div>
+            <div class="list__item list__item--template" hidden>
+              <div class="list__content">Rango de horas</div>
+              <button class="button button--ghost" type="button" data-kine-avail-remove>Eliminar</button>
+            </div>
+            <div class="actions actions--between">
+              <div class="actions">
+                <button class="button button--ghost" type="button" data-kine-avail-clear>Limpiar día</button>
+              </div>
+              <div class="actions">
+                <button class="button button--solid" type="button" data-kine-avail-save>Guardar disponibilidad</button>
+              </div>
+            </div>
+        </div>
+        <p class="status" data-kine-avail-msg></p>
+      </section>
+    </main>
+  </div>
+
+  <script src="./api.js" type="module"></script>
+  <script src="./request.js" type="module"></script>
+  <script src="./app.js" type="module"></script>
+</body>
+</html>
