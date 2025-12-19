@@ -1035,18 +1035,36 @@ function initPatientDataPage() {
     }
 
     const registerData = await registerRes.json().catch(() => ({}));
+    console.log("REGISTER STATUS:", registerRes.status);
+    console.log("REGISTER RESPONSE:", registerData);
+
 
     if (!registerRes.ok) {
       alert(registerData.detail || "Error al crear la cuenta.");
       return;
     }
 
-    
-    const token = registerData.token;
-    if (!token) {
-      alert("No se recibió token.");
-      return;
-    }
+    const loginRes = await fetch(`${BASE_URL}api/login`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "ngrok-skip-browser-warning": "true",
+  },
+  body: JSON.stringify({
+    email,
+    password,
+  }),
+});
+
+const loginData = await loginRes.json();
+
+if (!loginRes.ok || !loginData.token) {
+  alert("La cuenta se creó, pero no se pudo iniciar sesión.");
+  return;
+}
+
+const token = loginData.token;
+localStorage.setItem("authToken", token);
 
     localStorage.setItem("authToken", token);
     localStorage.setItem("user", JSON.stringify(registerData.user || {}));
