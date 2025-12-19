@@ -127,46 +127,6 @@ function writeLastAppointmentCache(record) {
   localStorage.setItem("lastAppointment", JSON.stringify(record));
 }
 
-async function bookAppointmentInBackend(pending, token) {
-  const normalized = normalizeBookingPayload(pending);
-
-  if (!normalized?.kinesiologistId || !normalized?.date || !normalized?.startTime) {
-    throw new Error("Faltan datos para crear la cita.");
-  }
-
-  const payload = {
-    patient_id: JSON.parse(localStorage.getItem("user")).id,
-    date: normalized.date,
-    start_time: normalized.startTime,
-    end_time: normalized.endTime || null,
-  };
-
- const res = await fetch(
-    `${BASE_URL}api/kinesiologists/${pending.kinesiologistId}/appointments/`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Token ${token}`,
-        "ngrok-skip-browser-warning": "true",
-      },
-      body: JSON.stringify({
-        date: pending.date,
-        start_time: pending.startTime,
-        end_time: pending.endTime,
-      }),
-    }
-  );
-
-  if (!res.ok) {
-    const txt = await res.text();
-    throw new Error(txt);
-  }
-
-  return await res.json();
-}
-
-
 function startOfWeekMonday(date) {
   const d = new Date(date);
   const day = d.getDay(); 
@@ -276,7 +236,12 @@ function updateAuthUI() {
       localStorage.removeItem("authToken");
       localStorage.removeItem("user");
       localStorage.removeItem("role");
+      localStorage.removeItem("pendingBooking");
+      localStorage.removeItem("confirmationData");
+      localStorage.removeItem("lastAppointment");
+
       window.location.href = "ingreseAqui.html";
+      
     };
 
     const userProfileUrl = isKineUser(user) ? "kine_perfil.html" : "historial.html";
@@ -297,12 +262,6 @@ function updateAuthUI() {
 
 window.updateAuthUI = updateAuthUI;
 
-/**
- * agendar.html
- * - Lista profesionales reales desde el backend
- * - Muestra perfil + servicios
- * - "Ver horarios" => guarda pendingBooking y te manda a horarios.html (UI antigua)
- */
 async function initKineDirectory() {
   const directoryRoot = document.querySelector("[data-kine-directory]");
   if (!directoryRoot) return;
@@ -862,6 +821,10 @@ function initLoginSystem() {
       if (data.role) localStorage.setItem("role", data.role);
       if (data.user) localStorage.setItem("user", JSON.stringify({ ...data.user, role: data.role || null }));
 
+      localStorage.removeItem("pendingBooking");
+      localStorage.removeItem("confirmationData");
+      localStorage.removeItem("appointmentCreated");
+
   
       try {
         const probe = await fetch(`${BASE_URL}api/kinesiologist/appointments/upcoming/`, {
@@ -1081,26 +1044,6 @@ localStorage.setItem("authToken", token);
 
     localStorage.setItem("confirmationData", JSON.stringify(confirmationData));
 
-    
-    try {
-      const booked = await bookAppointmentInBackend(confirmationData, token);
-      console.log("BOOKED RESULT:", booked);
-
-      if (booked?.id) {
-        localStorage.setItem(
-          "confirmationData",
-          JSON.stringify({ ...confirmationData, appointmentId: booked.id })
-        );
-      }
-    } catch (err) {
-      console.error("Error creando cita:", err);
-      alert(
-        "La cuenta se creó, pero la cita no pudo registrarse. Vuelve a seleccionar el horario."
-      );
-      return;
-    }
-
-    
     window.location.href = "confirmacion.html";
   });
 }
@@ -1301,77 +1244,100 @@ function initConfirmacionPage() {
   const page = document.body?.dataset?.page;
   if (page !== "confirmacion") return;
 
-  const dateEl = document.querySelector("[data-confirmation-date]");
-  const timeEl = document.querySelector("[data-confirmation-time]");
-  const professionalEl = document.querySelector("[data-confirmation-professional]");
-  const modalityEl = document.querySelector("[data-confirmation-modality]");
-
-  const patientEl = document.querySelector("[data-confirmation-patient]");
-  const emailEl = document.querySelector("[data-confirmation-email]");
-  const phoneEl = document.querySelector("[data-confirmation-phone]");
-  const rutEl = document.querySelector("[data-confirmation-rut]");
+  console.log("✅ initConfirmacionPage corriendo");
 
   const pending = normalizeBookingPayload(
-    safeParseJSON(localStorage.getItem("confirmationData"), null) ||
-     safeParseJSON(localStorage.getItem("pendingBooking"), null)
-  );
-  if (!pending) return;
-
-  const token = localStorage.getItem("authToken");
-  const start = pending.startTime || pending.start_time;
-  const end = pending.endTime || pending.end_time;
-
-  if (dateEl && pending.date) dateEl.textContent = pending.date;
-  if (timeEl && start) {
-    const range = end ? `${String(start).slice(0, 5)} - ${String(end).slice(0, 5)} hrs` : `${String(start).slice(0, 5)} hrs`;
-    timeEl.textContent = range;
-  }
-  if (professionalEl && pending.kinesiologistName) professionalEl.textContent = pending.kinesiologistName;
-  if (modalityEl) modalityEl.textContent = pending.modality || "Presencial";
-  if (patientEl && pending.patientName) patientEl.textContent = pending.patientName;
-  if (emailEl && pending.patientEmail) emailEl.textContent = pending.patientEmail;
-  if (phoneEl && pending.patientPhone) phoneEl.textContent = pending.patientPhone;
-  if (rutEl && pending.patientRut) rutEl.textContent = pending.patientRut;
-
-
-  const confirmBtn = document.getElementById("confirmAppointmentBtn");
-
-confirmBtn?.addEventListener("click", async () => {
-  const pending = normalizeBookingPayload(
-    safeParseJSON(localStorage.getItem("confirmationData"), null) ||
     safeParseJSON(localStorage.getItem("pendingBooking"), null)
   );
 
-  if (!pending?.kinesiologistId || !pending?.date || !pending?.startTime) {
-    alert("Faltan datos para confirmar la cita.");
-    return;
+  const confirmBtn = document.getElementById("confirmAppointmentBtn");
+  if (!confirmBtn) return;
+
+
+  confirmBtn.onclick = null;
+
+ 
+  if (pending) {
+    const dateEl = document.querySelector("[data-confirmation-date]");
+    const timeEl = document.querySelector("[data-confirmation-time]");
+    const professionalEl = document.querySelector("[data-confirmation-professional]");
+    const modalityEl = document.querySelector("[data-confirmation-modality]");
+    const patientEl = document.querySelector("[data-confirmation-patient]");
+    const emailEl = document.querySelector("[data-confirmation-email]");
+    const phoneEl = document.querySelector("[data-confirmation-phone]");
+    const rutEl = document.querySelector("[data-confirmation-rut]");
+
+    if (dateEl) dateEl.textContent = pending.date || "—";
+
+    if (timeEl && pending.startTime) {
+      const end = pending.endTime ? ` - ${pending.endTime.slice(0,5)}` : "";
+      timeEl.textContent = `${pending.startTime.slice(0,5)}${end} hrs`;
+    }
+
+    if (professionalEl) professionalEl.textContent = pending.kinesiologistName || "—";
+    if (modalityEl) modalityEl.textContent = pending.modality || "Presencial";
+    if (patientEl) patientEl.textContent = pending.patientName || "—";
+    if (emailEl) emailEl.textContent = pending.patientEmail || "—";
+    if (phoneEl) phoneEl.textContent = pending.patientPhone || "—";
+    if (rutEl) rutEl.textContent = pending.patientRut || "—";
   }
 
+
+  confirmBtn.addEventListener("click", async () => {
+  if (confirmBtn.disabled) return;
+
+  confirmBtn.disabled = true;
+  confirmBtn.textContent = "Confirmando...";
+
   try {
-    await createAppointment({
+    const pending = normalizeBookingPayload(
+      JSON.parse(localStorage.getItem("pendingBooking"))
+    );
+
+    if (!pending?.kinesiologistId || !pending?.date || !pending?.startTime) {
+      alert("Faltan datos para confirmar la cita.");
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = "Confirmar hora";
+      return;
+    }
+
+    const created = await createAppointment({
       kinesiologistId: pending.kinesiologistId,
       date: pending.date,
       startTime: pending.startTime,
       endTime: pending.endTime || null
     });
 
-    alert("✅ Hora confirmada correctamente");
+    console.log("✅ CITA CREADA:", created);
+
+    
+    document.getElementById("successBlock")?.removeAttribute("hidden");
+
+    
+    localStorage.removeItem("pendingBooking");
 
    
-    localStorage.removeItem("pendingBooking");
-    localStorage.removeItem("confirmationData");
+    confirmBtn.textContent = "Confirmado";
+    confirmBtn.disabled = true;
 
   
-    window.location.href = "historial.html";
+    setTimeout(() => {
+      window.location.href = "historial.html";
+    }, 2000);
 
   } catch (err) {
     console.error(err);
     alert("❌ No se pudo confirmar la cita");
+
+   
+    confirmBtn.disabled = false;
+    confirmBtn.textContent = "Confirmar hora";
   }
 });
 
 
 }
+
 
 async function initKinePanelView() {
   const token = localStorage.getItem("authToken");
@@ -2142,6 +2108,16 @@ async function initKineHorarioPage() {
   await loadDayFromBackend(selectedDay);
 }
 
+function addHoursToTime(timeStr, hours) {
+  if (!timeStr) return timeStr;
+  const [h, m, s] = timeStr.split(":").map(Number);
+  const d = new Date();
+  d.setHours(h + hours, m, s || 0, 0);
+  return d.toTimeString().slice(0, 8); 
+}
+
+
+
 async function createAppointment({
   kinesiologistId,
   date,
@@ -2160,6 +2136,13 @@ async function createAppointment({
   console.log("POST →", url);
   console.log("DATA →", { date, start_time: startTime, end_time: endTime });
 
+  console.log("APPOINTMENT PAYLOAD:", {
+  kinesiologistId,
+  date,
+  start_time: startTime,
+  end_time: endTime
+});
+  
   const res = await fetch(url, {
     method: "POST",
     headers: {
